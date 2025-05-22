@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Add Charity Action</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h2>Add New Charity Action</h2>
+
+        <form th:action="@{/admin/actions}" th:object="${charityAction}" method="post">
+            <!-- Title -->
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" th:field="*{title}" required>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" th:field="*{description}" required></textarea>
+            </div>
+
+             <!-- Image URL (for now, use a URL or path) -->
+             <div class="mb-3">
+                <label for="imageUrl" class="form-label">Image URL</label>
+                <input type="text" class="form-control" id="imageUrl" th:field="*{imageUrl}">
+            </div>
+
+            <!-- Target Amount -->
+            <div class="mb-3">
+                <label for="targetAmount" class="form-label">Target Amount</label>
+                <input type="number" class="form-control" id="targetAmount" th:field="*{targetAmount}" step="0.01" required>
+            </div>
+
+             <!-- Start Date -->
+            <div class="mb-3">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="datetime-local" class="form-control" id="startDate" th:field="*{startDate}">
+            </div>
+
+            <!-- End Date -->
+            <div class="mb-3">
+                <label for="endDate" class="form-label">End Date</label>
+                <input type="datetime-local" class="form-control" id="endDate" th:field="*{endDate}">
+            </div>
+
+            <!-- Category (you might want a dropdown for this) -->
+             <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <input type="text" class="form-control" id="category" th:field="*{category}">
+            </div>
+
+             <!-- Organization (you'll likely want a dropdown of existing organizations) -->
+             <div class="mb-3">
+                <label for="organizationId" class="form-label">Organization ID</label>
+                <input type="text" class="form-control" id="organizationId" th:field="*{organizationId}">
+                <!-- TODO: Replace with a dropdown populated from organizations -->
+            </div>
+
+            <!-- Status (you might want a dropdown for this) -->
+             <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                 <input type="text" class="form-control" id="status" th:field="*{status}">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Charity Action</button>
+        </form>
+
+    </div>
+</body>
+</html> 

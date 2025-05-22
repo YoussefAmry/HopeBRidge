@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>All Charity Actions</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <h1 class="mb-4">All Charity Actions</h1>
+
+            <!-- Search Bar -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <form th:action="@{/actions}" method="get" class="d-flex">
+                        <input type="text" 
+                               name="query" 
+                               th:value="${param.query}" 
+                               class="form-control me-2" 
+                               placeholder="Search actions...">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Actions Grid -->
+            <div class="row">
+                <div class="col-md-4 mb-4" th:each="action : ${actions}">
+                    <div class="card h-100">
+                        <img th:if="${action.imageUrl != null}" 
+                             th:src="${action.imageUrl}" 
+                             class="card-img-top" 
+                             alt="Charity Action Image"
+                             style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${action.title}">Action Title</h5>
+                            <p class="card-text" th:text="${#strings.abbreviate(action.description, 100)}">Description</p>
+                            <div class="progress mb-3">
+                                <div class="progress-bar" 
+                                     role="progressbar" 
+                                     th:style="'width: ' + ${(action.currentAmount / action.targetAmount) * 100} + '%'"
+                                     th:aria-valuenow="${(action.currentAmount / action.targetAmount) * 100}"
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                    <span th:text="${#numbers.formatPercent((action.currentAmount / action.targetAmount), 1, 1)}">0%</span>
+                                </div>
+                            </div>
+                            <a th:href="@{/actions/{id}(id=${action.id})}" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="row">
+                <div class="col-12">
+                    <nav th:if="${actions.totalPages > 1}">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${actions.first} ? 'disabled'">
+                                <a class="page-link" th:href="@{/actions(page=${actions.number - 1}, query=${param.query})}">Previous</a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, actions.totalPages - 1)}"
+                                th:classappend="${i == actions.number} ? 'active'">
+                                <a class="page-link" th:href="@{/actions(page=${i}, query=${param.query})}" th:text="${i + 1}">1</a>
+                            </li>
+                            <li class="page-item" th:classappend="${actions.last} ? 'disabled'">
+                                <a class="page-link" th:href="@{/actions(page=${actions.number + 1}, query=${param.query})}">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

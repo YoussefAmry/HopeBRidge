@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Hero Section -->
+        <section class="hero bg-primary text-white py-5 position-relative" style="background: linear-gradient(135deg, #0d6efd 0%, #0ab7b6 100%); min-height: 480px;">
+            <div class="container position-relative z-2">
+                <div class="row align-items-center">
+                    <div class="col-md-6 animate-fade-in">
+                        <h1 class="display-4 fw-bold mb-3" style="font-size:3.2rem; color: white">Make a Difference Today</h1>
+                        <p class="lead mb-4">Join our community of donors and organizations working together to create positive change.</p>
+                        <div class="mt-4">
+                            <a href="/register" class="btn btn-primary btn-lg me-3 shadow">Get Started</a>
+                            <a href="/actions" class="btn btn-outline-primary btn-lg shadow">Explore Actions</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center animate-fade-in">
+                        <img src="/images/hero-image.jpg" alt="Hero Image" class="img-fluid rounded-4 shadow-lg" style="max-height:340px; object-fit:cover;">
+                    </div>
+                </div>
+            </div>
+            <div class="section-divider"></div>
+        </section>
+
+        <!-- Featured Actions Section -->
+        <section class="py-5 animate-fade-in">
+            <div class="container">
+                <h2 class="text-center mb-4 fw-bold">Featured Charity Actions</h2>
+                <div class="d-flex justify-content-center">
+                    <div class="d-flex overflow-auto pb-3" style="max-width: 100%; gap: 32px;">
+                        <div th:each="action : ${featuredActions}" class="mb-4 me-3 flex-shrink-0" style="width: 320px;">
+                            <div class="card h-100 shadow-lg rounded-4 overflow-hidden animate-fade-in">
+                                <img th:src="${action.imageUrl != null ? action.imageUrl : '/images/default-action-image.jpg'}" class="card-img-top" 
+                                     th:alt="${action.title}" style="height: 180px; object-fit: cover;">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title mb-2 fw-bold" th:text="${action.title}">Action Title</h5>
+                                    <div th:if="${action.organizationId != null}" class="d-flex align-items-center mb-2">
+                                        <img th:if="${organizationsMap.containsKey(action.organizationId)}" 
+                                             th:src="${organizationsMap.get(action.organizationId).logoUrl != null ? organizationsMap.get(action.organizationId).logoUrl : '/images/default-organization-logo.png'}" 
+                                             alt="Organization Logo" style="width: 30px; height: 30px; margin-right: 8px; border-radius:50%;">
+                                        <span th:if="${organizationsMap.containsKey(action.organizationId)}" 
+                                              class="text-muted" th:text="${organizationsMap.get(action.organizationId).name}">Organization Name Placeholder</span>
+                                    </div>
+                                    <p class="card-text flex-grow-1" th:text="${action.description}">Action Description</p>
+                                    <div class="mb-2">
+                                        <small class="text-muted" th:text="${#numbers.formatDecimal(action.progress, 0, 0) + '%'}">75%</small>
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 th:style="'width: ' + ${action.progress} + '%'"
+                                                 th:attr="aria-valuenow=${action.progress}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between text-muted mb-3">
+                                        <span><small th:text="${#numbers.formatCurrency(action.currentAmount)}">$7,500 Collected</small></span>
+                                        <span><small th:text="${#numbers.formatCurrency(action.targetAmount)}">$10,000 Goal</small></span>
+                                    </div>
+                                    <div class="row g-2 mt-auto">
+                                        <div class="col">
+                                            <a th:href="@{'/actions/' + ${action.id}}" class="btn btn-success w-100 shadow-sm"><i class="fas fa-hand-holding-heart me-1"></i> Support Now</a>
+                                        </div>
+                                        <div class="col">
+                                            <a th:href="@{'/actions/' + ${action.id}}" class="btn btn-outline-primary w-100 shadow-sm">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="/actions" class="btn btn-outline-primary btn-lg shadow">View All Actions</a>
+                </div>
+            </div>
+            <div class="section-divider"></div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="bg-light py-5 animate-fade-in">
+            <div class="container">
+                <h2 class="text-center mb-5 fw-bold">How It Works</h2>
+                <div class="row">
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-circle mb-3 d-flex align-items-center justify-content-center shadow" style="width:90px; height:90px; font-size:2.5rem;">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h4 class="fw-bold">1. Find a Cause</h4>
+                        <p>Browse through our verified charity actions and find a cause that resonates with you.</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-circle mb-3 d-flex align-items-center justify-content-center shadow" style="width:90px; height:90px; font-size:2.5rem;">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <h4 class="fw-bold">2. Make a Donation</h4>
+                        <p>Choose your contribution amount and make a secure donation through our platform.</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="feature-icon bg-primary bg-gradient text-white rounded-circle mb-3 d-flex align-items-center justify-content-center shadow" style="width:90px; height:90px; font-size:2.5rem;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4 class="fw-bold">3. Track Impact</h4>
+                        <p>Follow the progress of your chosen cause and see the impact of your contribution.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="section-divider"></div>
+        </section>
+
+        <!-- Statistics Section -->
+        <section class="py-5 animate-fade-in">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-4">
+                        <h2 class="display-4 fw-bold text-primary">500+</h2>
+                        <p class="lead">Active Organizations</p>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <h2 class="display-4 fw-bold text-primary">1,000+</h2>
+                        <p class="lead">Charity Actions</p>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <h2 class="display-4 fw-bold text-primary">10,000+</h2>
+                        <p class="lead">Donors</p>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <h2 class="display-4 fw-bold text-primary">$1M+</h2>
+                        <p class="lead">Raised</p>
+                    </div>
+                </div>
+            </div>
+            <div class="section-divider"></div>
+        </section>
+
+        <!-- Partners Section -->
+        <section class="py-5" style="background:#f6f8fa;">
+            <div class="container">
+                <h2 class="text-center fw-bold mb-4">Partners</h2>
+                <div class="d-flex justify-content-center align-items-center">
+                    <button id="partners-left" class="btn btn-light rounded-circle shadow-sm me-2" style="width:40px; height:40px; font-size:24px;">&#8592;</button>
+                    <div id="partners-carousel" class="d-flex overflow-auto" style="gap:40px; max-width:1200px; scroll-behavior:smooth;">
+                        <a href="https://partner1.com" target="_blank">
+                            <img src="/images/action1.jpg" alt="Partner 1" style="width:200px; height:200px; object-fit:contain; border-radius:20px; background:white; box-shadow:0 2px 8px #eee;">
+                        </a>
+                        <a href="https://partner2.com" target="_blank">
+                            <img src="/images/action2.jpg" alt="Partner 2" style="width:200px; height:200px; object-fit:contain; border-radius:20px; background:white; box-shadow:0 2px 8px #eee;">
+                        </a>
+                        <a href="https://partner3.com" target="_blank">
+                            <img src="/images/action3.jpg" alt="Partner 3" style="width:200px; height:200px; object-fit:contain; border-radius:20px; background:white; box-shadow:0 2px 8px #eee;">
+                        </a>
+                        <a href="https://partner4.com" target="_blank">
+                            <img src="/images/partner4.png" alt="Partner 4" style="width:200px; height:200px; object-fit:contain; border-radius:20px; background:white; box-shadow:0 2px 8px #eee;">
+                        </a>
+                        <a href="https://partner4.com" target="_blank">
+                            <img src="/images/partner4.png" alt="Partner 4" style="width:200px; height:200px; object-fit:contain; border-radius:20px; background:white; box-shadow:0 2px 8px #eee;">
+                        </a>
+                        <a href="https://partner4.com" target="_blank">
+                            <img src="/images/partner4.png" alt="Partner 4" style="width:200px; height:200px; object-fit:contain; border-radius:20px; background:white; box-shadow:0 2px 8px #eee;">
+                        </a>
+                        <a href="https://partner4.com" target="_blank">
+                            <img src="/images/partner4.png" alt="Partner 4" style="width:200px; height:200px; object-fit:contain; border-radius:20px; background:white; box-shadow:0 2px 8px #eee;">
+                        </a>
+                        <a href="https://partner4.com" target="_blank">
+                            <img src="/images/partner4.png" alt="Partner 4" style="width:200px; height:200px; object-fit:contain; border-radius:20px; background:white; box-shadow:0 2px 8px #eee;">
+                        </a>
+                        <a href="https://partner4.com" target="_blank">
+                            <img src="/images/partner4.png" alt="Partner 4" style="width:200px; height:200px; object-fit:contain; border-radius:20px; background:white; box-shadow:0 2px 8px #eee;">
+                        </a>
+                    </div>
+                    <button id="partners-right" class="btn btn-light rounded-circle shadow-sm ms-2" style="width:40px; height:40px; font-size:24px;">&#8594;</button>
+                </div>
+            </div>
+        </section>
+        <script>
+            const carousel = document.getElementById('partners-carousel');
+            document.getElementById('partners-left').onclick = () => carousel.scrollBy({left: -300, behavior: 'smooth'});
+            document.getElementById('partners-right').onclick = () => carousel.scrollBy({left: 300, behavior: 'smooth'});
+        </script>
+
+        <!-- Call to Action -->
+        <section class="bg-primary text-white py-5">
+            <div class="container text-center">
+                <h2 class="mb-4">Ready to Make a Difference?</h2>
+                <p class="lead mb-4">Join our community of donors and organizations working together to create positive change.</p>
+                <a href="/register" class="btn btn-light btn-lg">Get Started Now</a>
+            </div>
+        </section>
+    </div>
+</body>
+</html> 

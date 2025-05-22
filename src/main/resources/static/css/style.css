@@ -1,0 +1,512 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+:root {
+  --primary: #0d6efd;
+  --secondary: #0ab7b6;
+  --accent: #f7b731;
+  --bg: #f7fafd;
+  --card-bg: #fff;
+  --text: #222;
+  --muted: #6c757d;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --radius: 18px;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+section {
+  margin-bottom: 48px;
+}
+
+.card, .card-body, .card-header {
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow);
+  background: var(--card-bg);
+  border: none;
+}
+
+.btn-primary, .btn-success {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover, .btn-success:hover {
+  background: linear-gradient(90deg, var(--secondary), var(--primary));
+  box-shadow: 0 4px 16px rgba(13,110,253,0.12);
+}
+
+.btn-outline-primary {
+  border-radius: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  background: #fff;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-outline-primary:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.navbar {
+  box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  border-radius: 0 0 18px 18px;
+}
+
+.navbar .nav-link {
+  font-weight: 600;
+  color: var(--text) !important;
+  transition: color 0.2s;
+}
+.navbar .nav-link.active, .navbar .nav-link:hover {
+  color: var(--primary) !important;
+}
+
+.footer-social a {
+  color: var(--primary);
+  margin-right: 12px;
+  font-size: 1.4rem;
+  transition: color 0.2s;
+}
+.footer-social a:hover {
+  color: var(--secondary);
+}
+
+footer {
+  background: #f1f4f8;
+  border-top: 1px solid #e3e8ee;
+  border-radius: 18px 18px 0 0;
+}
+
+/* Section dividers */
+.section-divider {
+  width: 100%;
+  height: 48px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+  border-radius: 0 0 48px 48px;
+  margin-bottom: -24px;
+}
+
+/* Partners carousel */
+#partners-carousel a img {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+#partners-carousel a:hover img {
+  transform: scale(1.06) rotate(-2deg);
+  box-shadow: 0 8px 32px rgba(13,110,253,0.12);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .navbar .container { flex-direction: column; }
+  .footer-social { margin-bottom: 16px; }
+  .card, .card-body, .card-header { border-radius: 12px !important; }
+  .section-divider { height: 24px; border-radius: 0 0 24px 24px; }
+}
+
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    padding: 80px 0;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Feature Icons */
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+/* Cards */
+.card {
+    transition: transform 0.3s ease;
+    border: none;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Progress Bars */
+.progress {
+    height: 6px;
+    border-radius: 3px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background-color: #0d6efd; /* Changed to primary blue */
+}
+
+/* Buttons */
+.btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.btn-success {
+    background-color: #0d6efd; /* Changed to primary blue */
+    border-color: #0d6efd; /* Changed to primary blue */
+}
+
+.btn-success:hover {
+    background-color: #0b5ed7; /* Darker blue on hover */
+    border-color: #0a58ca; /* Darker blue on hover */
+}
+
+.btn-outline-secondary {
+    color: #545b62;
+    border-color: #545b62;
+}
+
+.btn-outline-secondary:hover {
+    color: #fff;
+    background-color: #545b62;
+    border-color: #545b62;
+}
+
+/* Navigation */
+.navbar {
+    padding: 0.8rem 0;
+    background-color: #ffffff !important; /* White background */
+    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+    border-bottom: 1px solid #e0e0e0; /* Subtle border */
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #0d6efd !important; /* Primary brand color */
+}
+
+.navbar-brand img {
+    max-height: 40px;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: #333 !important;
+    padding: 0.5rem 1rem !important;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #0d6efd !important; /* Primary color on hover */
+}
+
+.navbar-nav .dropdown-menu {
+    border-radius: 5px;
+    margin-top: 0;
+    border: 1px solid rgba(0,0,0,.15); /* Standard dropdown border */
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.175); /* Deeper shadow */
+}
+
+.navbar-nav .dropdown-item {
+    font-weight: 400;
+}
+
+.navbar-nav .nav-item {
+    margin-right: 15px; /* Spacing between nav items */
+}
+
+.navbar-nav .nav-item:last-child {
+    margin-right: 0; /* No margin for the last item */
+}
+
+.navbar-nav .dropdown-toggle::after {
+    display: none; /* Remove default dropdown arrow */
+}
+
+/* Footer */
+footer {
+    background-color: #f0f2f5; /* Light grey background */
+    padding: 3rem 0;
+    color: #555; /* Darker text color */
+}
+
+footer h5 {
+    color: #333; /* Darker heading color */
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+footer p {
+    margin-bottom: 0.5rem;
+}
+
+footer a {
+    color: #555;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #0d6efd; /* Primary color on hover */
+}
+
+.footer .list-unstyled li {
+    margin-bottom: 0.5rem;
+}
+
+.footer .social-links a {
+    color: #666;
+    font-size: 1.8rem; /* Larger icons */
+    margin-right: 15px;
+    transition: color 0.3s ease;
+}
+
+.footer .social-links a:hover {
+    color: #0d6efd;
+}
+
+.footer hr {
+    border-top: 1px solid #ccc;
+    margin: 2rem 0;
+}
+
+/* Statistics Section */
+.display-4 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero {
+        padding: 40px 0;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .display-4 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Custom Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Form Styles */
+.form-control {
+    border-radius: 5px;
+    padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Badge Styles */
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0d6efd;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0b5ed7;
+}
+
+/* Added styles for Navbar and Footer based on Ensany */
+
+/* Navbar */
+.navbar {
+    border-bottom: 1px solid #e0e0e0; /* Subtle border */
+}
+
+.navbar-nav .nav-item {
+    margin-right: 15px; /* Spacing between nav items */
+}
+
+.navbar-nav .nav-item:last-child {
+    margin-right: 0; /* No margin for the last item */
+}
+
+.navbar-nav .dropdown-toggle::after {
+    display: none; /* Remove default dropdown arrow */
+}
+
+.navbar-nav .dropdown-menu {
+    border: 1px solid rgba(0,0,0,.15); /* Standard dropdown border */
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.175); /* Deeper shadow */
+}
+
+.navbar-nav .dropdown-item {
+    font-weight: 400;
+}
+
+/* Footer */
+footer {
+    background-color: #f0f2f5; /* Light grey background */
+    color: #555; /* Darker text color */
+}
+
+footer h5 {
+    color: #333; /* Darker heading color */
+    font-size: 1.2rem;
+}
+
+footer p {
+    margin-bottom: 0.5rem;
+}
+
+footer a {
+    color: #555;
+}
+
+footer a:hover {
+    color: #0d6efd; /* Primary color on hover */
+}
+
+.footer .list-unstyled li {
+    margin-bottom: 0.5rem;
+}
+
+.footer .social-links a {
+    color: #666;
+    font-size: 1.8rem; /* Larger icons */
+    margin-right: 15px;
+    transition: color 0.3s ease;
+}
+
+.footer .social-links a:hover {
+    color: #0d6efd;
+}
+
+.footer hr {
+    border-top: 1px solid #ccc;
+    margin: 2rem 0;
+}
+
+/* Added styles for Featured Actions Section based on Ensany */
+
+.overflow-auto {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.overflow-auto::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.overflow-auto {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.card.rounded-3 {
+    border-radius: 15px !important; /* More rounded corners */
+}
+
+.card .card-img-top {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.card .card-body {
+    padding: 1rem;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.d-flex.align-items-center img {
+    border-radius: 50%; /* Rounded organization logo */
+}
+
+/* Centering the horizontal scroll container */
+.horizontal-scroll-container-wrapper {
+    max-width: 960px; /* Or a suitable width for your design */
+    margin: 0 auto; /* Center the block element */
+}
