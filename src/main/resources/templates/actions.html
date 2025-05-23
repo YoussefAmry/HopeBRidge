@@ -46,7 +46,7 @@
                                     <span th:text="${#numbers.formatPercent((action.currentAmount / action.targetAmount), 1, 1)}">0%</span>
                                 </div>
                             </div>
-                            <a th:href="@{/actions/{id}(id=${action.id})}" class="btn btn-primary">Learn More</a>
+                            <a th:href="@{/actions/{id}/details(id=${action.id})}" class="btn btn-primary">Learn More</a>
                         </div>
                     </div>
                 </div>

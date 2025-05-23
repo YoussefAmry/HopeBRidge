@@ -33,7 +33,8 @@ public class SecurityConfig {
                     "/webjars/**",
                     "/favicon.ico",
                     "/error",
-                    "/uploads/profile-pictures/**"
+                    "/uploads/profile-pictures/**",
+                    "/change-language"
                 ).permitAll()
                 .requestMatchers("/admin/**").hasRole("SUPER_ADMIN")
                 .requestMatchers("/dashboard").authenticated()

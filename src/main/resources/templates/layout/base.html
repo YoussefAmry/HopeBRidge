@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">HopeBridge</title>
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE" th:text="#{app.name}">HopeBridge</title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
@@ -19,119 +19,337 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <!-- Additional head content -->
     <th:block layout:fragment="head"></th:block>
     <style>
+        /* Loading Screen Styles */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0d6efd 0%, #0ab7b6 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+            overflow: hidden;
+        }
+
+        .loading-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .loading-logo {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .loading-logo::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 2s infinite;
+        }
+
+        .loading-logo::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 2s infinite 0.5s;
+        }
+
+        .loading-spinner {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+        }
+
+        .loading-spinner::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
         body { font-family: 'Montserrat', sans-serif; background: #f7fafd; }
         .navbar {
             position: sticky; top: 0; z-index: 1000;
-            background: rgba(255,255,255,0.85); backdrop-filter: blur(8px);
-            box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding: 1rem 0;
         }
-        .navbar .nav-link, .navbar .navbar-brand { font-weight: 600; letter-spacing: 0.5px; }
-        .navbar .nav-link.active, .navbar .nav-link:hover { color: #0d6efd !important; }
-        .navbar .dropdown-menu { border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-        .navbar .flag-icon { width: 22px; height: 16px; margin-right: 6px; border-radius: 2px; object-fit: cover; }
-        .navbar .dropdown-item:active { background: #e3f0ff; }
-        .footer-social a { color: #0d6efd; margin-right: 12px; font-size: 1.4rem; transition: color 0.2s; }
-        .footer-social a:hover { color: #0ab7b6; }
-        footer { background: #f1f4f8; border-top: 1px solid #e3e8ee; }
+        .navbar .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #0d6efd 0%, #0ab7b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+        .navbar .nav-link {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .navbar .nav-link:hover {
+            background: rgba(13, 110, 253, 0.1);
+            transform: translateY(-1px);
+        }
+        .navbar .nav-link.active {
+            background: linear-gradient(135deg, #0d6efd 0%, #0ab7b6 100%);
+            color: white !important;
+        }
+        .navbar .dropdown-menu {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            margin-top: 0.5rem;
+        }
+        .navbar .dropdown-item {
+            padding: 0.7rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .navbar .dropdown-item:hover {
+            background: rgba(13, 110, 253, 0.1);
+            transform: translateX(5px);
+        }
+        .navbar .dropdown-item:active {
+            background: linear-gradient(135deg, #0d6efd 0%, #0ab7b6 100%);
+        }
+        .dropdown-item-form { margin: 0; padding: 0; }
+        .dropdown-item-form .dropdown-item {
+            width: 100%;
+            text-align: left;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .dropdown-item-form .dropdown-item:hover {
+            background: rgba(13, 110, 253, 0.1);
+            transform: translateX(5px);
+        }
+        footer {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 4rem 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #0d6efd, #0ab7b6);
+        }
+        footer h5 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #0d6efd 0%, #0ab7b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        footer p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+        }
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .footer-social a {
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+        }
+        .footer-social a:hover {
+            background: linear-gradient(135deg, #0d6efd 0%, #0ab7b6 100%);
+            transform: translateY(-3px);
+            color: white;
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 3rem;
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+        }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="particles" id="particles"></div>
+        <div class="loading-content">
+            <div class="loading-logo" th:text="#{app.name}">HopeBridge</div>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <img src="/images/ensany-logo.png" alt="Organization Logo" style="width: 80px; height: 80px; margin-right: 50px;">
+            <a class="navbar-brand" href="/" th:text="#{app.name}">HopeBridge</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Main Navigation Links -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/}">Home</a>
+                        <a class="nav-link" th:href="@{/}" th:text="#{nav.home}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/actions}">Charity Actions</a>
+                        <a class="nav-link" th:href="@{/actions}" th:text="#{nav.actions}">Charity Actions</a>
                     </li>
-                    <!-- Add other main links here as needed -->
                 </ul>
-
-                <!-- Right Aligned Items -->
-                <ul class="navbar-nav ms-auto">
-                    <!-- Language Switcher with Flags -->
+                <ul class="navbar-nav">
+                    <!-- Language Selection -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
-                            <img src="/images/flag-en.png" class="flag-icon" alt="EN"> English
+                            <i class="fas fa-globe"></i>
+                            <span th:text="${#locale.language == 'en' ? 'English' : 'Français'}">Language</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
-                            <li><a class="dropdown-item" href="?lang=en"><img src="/images/flag-en.png" class="flag-icon" alt="EN"> English</a></li>
-                            <li><a class="dropdown-item" href="?lang=fr"><img src="/images/flag-fr.png" class="flag-icon" alt="FR"> Français</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a th:href="@{/change-language(lang='en')}" class="dropdown-item" th:classappend="${#locale.language == 'en'} ? 'active'">
+                                    <i class="fas fa-flag-usa me-2"></i> English
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{/change-language(lang='fr')}" class="dropdown-item" th:classappend="${#locale.language == 'fr'} ? 'active'">
+                                    <i class="fas fa-flag me-2"></i> Français
+                                </a>
+                            </li>
                         </ul>
-                    </li>
-                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="currencyDropdown" role="button" data-bs-toggle="dropdown">
-                           <i class="fas fa-money-bill-wave me-1"></i> USD
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="currencyDropdown">
-                            <li><a class="dropdown-item" href="#">$-USD</a></li>
-                            <li><a class="dropdown-item" href="#">€-EUR</a></li>
-                            <!-- Add other currencies -->
-                        </ul>
-                    </li>
-
-                    <!-- Login/Register or Profile Dropdown -->
-                    <li class="nav-item" sec:authorize="!isAuthenticated()">
-                        <a class="nav-link" th:href="@{/login}">Login</a>
-                    </li>
-                    <li class="nav-item" sec:authorize="!isAuthenticated()">
-                        <a class="nav-link" th:href="@{/register}">Register</a>
                     </li>
                     
-                    <!-- Show these items only when authenticated -->
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <div class="dropdown">
-                            <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center" 
-                                    type="button" 
-                                    id="userDropdown" 
-                                    data-bs-toggle="dropdown">
-                                <img th:if="${user != null}" th:src="${user.profilePicture != null ? user.profilePicture : '/images/default-avatar.png'}"
-                                     class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
-                                <img th:unless="${user != null}" src="/images/default-avatar.png"
-                                     class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
-                                <span th:if="${user != null}" th:text="${user.firstName != null ? user.firstName : 'User'}">User</span>
-                                <span th:unless="${user != null}">User</span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" th:href="@{/dashboard}">
-                                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                                </a></li>
-                                <li><a class="dropdown-item" th:href="@{/profile}">
-                                    <i class="fas fa-user me-2"></i>Profile
-                                </a></li>
-                                <li><a class="dropdown-item" th:href="@{/my-donations}">
-                                    <i class="fas fa-hand-holding-heart me-2"></i>My Donations
-                                </a></li>
-                                <li><a class="dropdown-item" th:href="@{/my-actions}">
-                                    <i class="fas fa-project-diagram me-2"></i>My Actions
-                                </a></li>
-                                <li><a class="dropdown-item" th:href="@{/notifications}">
-                                    <i class="fas fa-bell me-2"></i>Notifications
-                                </a></li>
-                                <li><a class="dropdown-item" th:href="@{/settings}">
-                                    <i class="fas fa-cog me-2"></i>Settings
-                                </a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form th:action="@{/logout}" method="post" class="dropdown-item-form">
-                                        <button type="submit" class="dropdown-item">
-                                            <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
+                    <!-- User Menu -->
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" th:href="@{/dashboard}" th:text="#{nav.dashboard}">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a></li>
+                            <li><a class="dropdown-item" th:href="@{/profile}" th:text="#{nav.profile}">
+                                <i class="fas fa-user me-2"></i>Profile
+                            </a></li>
+                            <li><a class="dropdown-item" th:href="@{/my-donations}" th:text="#{nav.my-donations}">
+                                <i class="fas fa-hand-holding-heart me-2"></i>My Donations
+                            </a></li>
+                            <li><a class="dropdown-item" th:href="@{/notifications}" th:text="#{nav.notifications}">
+                                <i class="fas fa-bell me-2"></i>Notifications
+                            </a></li>
+                            <li><a class="dropdown-item" th:href="@{/settings}" th:text="#{nav.settings}">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post" class="dropdown-item-form">
+                                    <button type="submit" class="dropdown-item" th:text="#{nav.logout}">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" th:href="@{/login}" th:text="#{auth.login}">Login</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" th:href="@{/register}" th:text="#{auth.register}">Register</a>
                     </li>
                 </ul>
             </div>
@@ -157,40 +375,47 @@
     </main>
 
     <!-- Footer -->
-    <footer class="py-4 mt-auto">
+    <footer class="bg-dark text-light py-5 mt-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 mb-3 mb-md-0">
-                    <h5 class="fw-bold">HopeBridge</h5>
-                    <p class="text-muted">Making a difference together</p>
-                    <div class="footer-social">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3 text-white" th:text="#{footer.about}">About</h5>
+                    <p class="text-white-50">HopeBridge connects donors with charitable organizations, making it easy to support causes you care about.</p>
                 </div>
-                <div class="col-md-4 mb-3 mb-md-0">
-                    <h5 class="fw-bold">Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a th:href="@{/}" class="text-muted text-decoration-none">Home</a></li>
-                        <li><a th:href="@{/actions}" class="text-muted text-decoration-none">Charity Actions</a></li>
-                        <li><a href="#" class="text-muted text-decoration-none">Contact Us</a></li>
-                        <li><a href="#" class="text-muted text-decoration-none">FAQ</a></li>
-                        <li><a href="#" class="text-muted text-decoration-none">About Us</a></li>
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3 text-white" th:text="#{footer.contact}">Contact</h5>
+                    <ul class="list-unstyled text-white-50">
+                        <li><i class="fas fa-envelope me-2"></i> contact@hopebridge.com</li>
+                        <li><i class="fas fa-phone me-2"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i> 123 Charity St, City</li>
                     </ul>
                 </div>
-                <div class="col-md-4">
-                    <h5 class="fw-bold">Contact</h5>
-                    <p class="text-muted mb-1"><i class="fas fa-envelope me-2"></i>info@hopebridge.org</p>
-                    <p class="text-muted mb-1"><i class="fas fa-phone me-2"></i>+123 456 7890</p>
-                    <p class="text-muted"><i class="fas fa-map-marker-alt me-2"></i>123 Main St, City, Country</p>
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3 text-white" th:text="#{footer.newsletter}">Subscribe to our newsletter</h5>
+                    <form class="mb-3">
+                        <div class="input-group">
+                            <input type="email" class="form-control" th:placeholder="#{footer.newsletter.placeholder}" placeholder="Enter your email">
+                            <button class="btn btn-primary" type="submit" th:text="#{footer.newsletter.subscribe}">Subscribe</button>
+                        </div>
+                    </form>
+                    <h6 class="mb-2 text-white" th:text="#{footer.social.follow}">Follow us</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
                 </div>
             </div>
-            <hr>
+            <hr class="my-4 border-secondary">
             <div class="row">
-                <div class="col-12 text-center text-muted">
-                    <p class="mb-0">&copy; 2025 HopeBridge. All rights reserved.</p>
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0 text-white-50" th:text="#{footer.copyright}">© 2024 HopeBridge. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="/terms" class="text-white-50 me-3" th:text="#{footer.terms}">Terms of Use</a>
+                    <a href="/privacy" class="text-white-50 me-3" th:text="#{footer.privacy}">Privacy Policy</a>
+                    <a href="/cookies" class="text-white-50" th:text="#{footer.cookies}">Cookie Policy</a>
                 </div>
             </div>
         </div>
@@ -198,6 +423,62 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            mirror: false
+        });
+
+        // Create particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random starting position
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                // Random size
+                const size = Math.random() * 4 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Random animation duration and delay
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = (Math.random() * 5) + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Loading Screen
+        window.addEventListener('load', function() {
+            const loadingScreen = document.querySelector('.loading-screen');
+            
+            // Check if this is a page refresh or first visit
+            if (performance.navigation.type === performance.navigation.TYPE_RELOAD || 
+                !sessionStorage.getItem('hasVisited')) {
+                createParticles();
+                setTimeout(() => {
+                    loadingScreen.classList.add('fade-out');
+                }, 2000);
+                // Mark that user has visited
+                sessionStorage.setItem('hasVisited', 'true');
+            } else {
+                // If it's not a refresh or first visit, hide the loading screen immediately
+                loadingScreen.style.display = 'none';
+            }
+        });
+    </script>
     <!-- Custom JS -->
     <!-- <script th:src="@{/js/main.js}"></script> -->
     <!-- Additional scripts -->

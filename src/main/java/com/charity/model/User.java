@@ -40,6 +40,8 @@ public class User {
 
     private UserRole role = UserRole.DONOR;
     private boolean enabled = true;
+    private boolean emailNotifications = true;
+    private boolean donationUpdates = true;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
